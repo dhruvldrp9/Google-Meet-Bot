@@ -14,7 +14,7 @@ This project is a Python bot that automates the process of logging into Gmail, j
 1. Clone the repository:
 
    ```bash
-   git clone https://github.com/yourusername/google-meet-bot.git
+   git clone https://github.com/dhruvldrp9/Google-Meet-Bot.git
    cd google-meet-bot
 
 2. Make python environment:
@@ -41,10 +41,11 @@ This project is a Python bot that automates the process of logging into Gmail, j
 
    ```bash
    export OPENAI_API_KEY="Your_OpenAI_Api_Key"
-
+   
    export email_id="Your_email_id"
-
+   
    export email_password="your_email_password"
+   ```
 
 
 6. Run Script:
