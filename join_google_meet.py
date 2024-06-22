@@ -52,9 +52,9 @@ class JoinGoogleMeet:
         print("Gmail login activity: Done")
  
  
-    def turnOffMicCam(self):
+    def turnOffMicCam(self, meet_link):
         # Navigate to Google Meet URL (replace with your meeting URL)
-        self.driver.get('https://meet.google.com/jwc-kwyy-ozq')
+        self.driver.get(meet_link)
         # turn off Microphone
         time.sleep(2)
         self.driver.find_element(By.CSS_SELECTOR, 'div[jscontroller="t2mBxb"][data-anchor-id="hw0c9"]').click()
@@ -96,10 +96,11 @@ def main():
     temp_dir = tempfile.mkdtemp()
     audio_path = os.path.join(temp_dir, "output.wav")
     # Duration for bot to record audio
+    meet_link = 'https://meet.google.com/jwc-kwyy-ozq'
     duration = 60
     obj = JoinGoogleMeet()
     obj.Glogin()
-    obj.turnOffMicCam()
+    obj.turnOffMicCam(meet_link)
     obj.AskToJoin(audio_path, duration)
     SpeechToText().transcribe(audio_path)
 
