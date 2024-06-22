@@ -5,8 +5,7 @@ This project is a Python bot that automates the process of logging into Gmail, j
 
 - Python 3.8 or higher
 - Chrome browser
-- ChromeDriver (compatible with your Chrome browser version)
-- Google Cloud Speech-to-Text API (for audio transcription)
+- OpenAI Api Key
 - A Gmail account
 - A Google Meet link
 
