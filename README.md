@@ -18,7 +18,7 @@ This project is a Python bot that automates the process of logging into Gmail, j
 
    ```bash
    git clone https://github.com/dhruvldrp9/Google-Meet-Bot.git
-   cd google-meet-bot
+   cd Google-Meet-Bot
 
 2. Make python environment:
 
