@@ -4,62 +4,54 @@ import os
 import subprocess
 import tempfile
 import datetime
+from dotenv import load_dotenv
 
+load_dotenv()
 
 class SpeechToText:
     def __init__(self):
         self.client = OpenAI(
-            # defaults to os.environ.get("OPENAI_API_KEY")
-            api_key= os.environ.get("OPENAI_API_KEY"),
+            api_key=os.getenv("OPENAI_API_KEY")
         )
-        self.MAX_AUDIO_SIZE_BYTES = 20 * 1024 * 1024
-
+        self.MAX_AUDIO_SIZE_BYTES = int(os.getenv('MAX_AUDIO_SIZE_BYTES', 20 * 1024 * 1024))
+        self.GPT_MODEL = os.getenv('GPT_MODEL', 'gpt-4')
+        self.WHISPER_MODEL = os.getenv('WHISPER_MODEL', 'whisper-1')
 
     def get_file_size(self, file_path):
         return os.path.getsize(file_path)
-
 
     def get_audio_duration(self, audio_file_path):
         result = subprocess.run(['ffprobe', '-i', audio_file_path, '-show_entries', 'format=duration', '-v', 'quiet', '-of', 'csv=%s' % ("p=0")], stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
         return float(result.stdout)
 
-
     def resize_audio_if_needed(self, audio_file_path):
         audio_size = self.get_file_size(audio_file_path)
         if audio_size > self.MAX_AUDIO_SIZE_BYTES:
-            # Calculate a reasonable duration reduction
             current_duration = self.get_audio_duration(audio_file_path)
             target_duration = current_duration * self.MAX_AUDIO_SIZE_BYTES / audio_size
             
-            # Create a temporary directory for storing compressed audio
             temp_dir = tempfile.mkdtemp()
             print(f"Compressed audio will be stored in {temp_dir}")
             
-            # Generate a unique filename based on current timestamp
             compressed_audio_path = os.path.join(temp_dir, f'compressed_audio_{datetime.datetime.now().strftime("%Y%m%d%H%M%S")}.wav')
             
-            # Use ffmpeg to compress the audio file
             subprocess.run(['ffmpeg', '-i', audio_file_path, '-ss', '0', '-t', str(target_duration), compressed_audio_path])
             
             return compressed_audio_path
         return audio_file_path
 
-
-
     def transcribe_audio(self, audio_file_path):
         with open(audio_file_path, 'rb') as audio_file:
             transcript = self.client.audio.translations.create(
                 file=audio_file,
-                model="whisper-1",
+                model=self.WHISPER_MODEL,
             )
             print("Transcribe: Done")
             return transcript.text
 
-
-
     def abstract_summary_extraction(self, transcription):
         response = self.client.chat.completions.create(
-            model="gpt-4",
+            model=self.GPT_MODEL,
             temperature=0,
             messages=[
                 {
@@ -75,11 +67,9 @@ class SpeechToText:
         print("Summary: Done")
         return response.choices[0].message.content
 
-
-
     def key_points_extraction(self, transcription):
         response = self.client.chat.completions.create(
-            model="gpt-4",
+            model=self.GPT_MODEL,
             temperature=0,
             messages=[
                 {
@@ -95,12 +85,9 @@ class SpeechToText:
         print("Key Points: Done")
         return response.choices[0].message.content
 
-
-
-
     def action_item_extraction(self, transcription):
         response = self.client.chat.completions.create(
-            model="gpt-4",
+            model=self.GPT_MODEL,
             temperature=0,
             messages=[
                 {
@@ -116,10 +103,9 @@ class SpeechToText:
         print("Action Items: Done")
         return response.choices[0].message.content
 
-
     def sentiment_analysis(self, transcription):
         response = self.client.chat.completions.create(
-            model="gpt-4",
+            model=self.GPT_MODEL,
             temperature=0,
             messages=[
                 {
@@ -147,9 +133,6 @@ class SpeechToText:
             'sentiment': sentiment
         }
 
-
-
-    #function to store dictonary in json file in give path
     def store_in_json_file(self, data):
         temp_dir = tempfile.mkdtemp()
         file_path = os.path.join(temp_dir, f'meeting_data_{datetime.datetime.now().strftime("%Y%m%d%H%M%S")}.json')
@@ -158,18 +141,13 @@ class SpeechToText:
             json.dump(data, f)
         print("JSON file created successfully.")
 
-
-
     def transcribe(self, audio_file_path):
         audio_file_path = self.resize_audio_if_needed(audio_file_path)
         transcription = self.transcribe_audio(audio_file_path)
         summary = self.meeting_minutes(transcription)
         self.store_in_json_file(summary)
-
-    
     
         print(f"Abstract Summary: {summary['abstract_summary']}")
         print(f"Key Points: {summary['key_points']}")
         print(f"Action Items: {summary['action_items']}")
         print(f"Sentiment: {summary['sentiment']}")
-

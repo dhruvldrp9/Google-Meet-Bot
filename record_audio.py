@@ -1,10 +1,13 @@
 import sounddevice as sd
 from scipy.io.wavfile import write
+import os
+from dotenv import load_dotenv
 
+load_dotenv()
 
 class AudioRecorder:
-    def __init__(self, sample_rate=44100):
-        self.sample_rate = sample_rate
+    def __init__(self):
+        self.sample_rate = int(os.getenv('SAMPLE_RATE', 44100))
 
     def get_audio(self, filename, duration):
         print("Recording...")
