@@ -10,13 +10,14 @@ from record_audio import AudioRecorder
 from speech_to_text import SpeechToText
 import os
 import tempfile
+from dotenv import load_dotenv
 
-
+load_dotenv()
 
 class JoinGoogleMeet:
     def __init__(self):
-        self.mail_address = os.environ.get('email_id')
-        self.password = os.environ.get('email_password')
+        self.mail_address = os.getenv('EMAIL_ID')
+        self.password = os.getenv('EMAIL_PASSWORD')
         # create chrome instance
         opt = Options()
         opt.add_argument('--disable-blink-features=AutomationControlled')
@@ -28,7 +29,6 @@ class JoinGoogleMeet:
             "profile.default_content_setting_values.notifications": 1
         })
         self.driver = webdriver.Chrome(options=opt)
-
 
     def Glogin(self):
         # Login Page
@@ -51,9 +51,8 @@ class JoinGoogleMeet:
         self.driver.implicitly_wait(100)
         print("Gmail login activity: Done")
  
- 
     def turnOffMicCam(self, meet_link):
-        # Navigate to Google Meet URL (replace with your meeting URL)
+        # Navigate to Google Meet URL
         self.driver.get(meet_link)
         # turn off Microphone
         time.sleep(2)
@@ -67,7 +66,6 @@ class JoinGoogleMeet:
         self.driver.implicitly_wait(3000)
         print("Turn of camera activity: Done")
  
- 
     def checkIfJoined(self):
         try:
             # Wait for the join button to appear
@@ -77,7 +75,6 @@ class JoinGoogleMeet:
             print("Meeting has been joined")
         except (TimeoutException, NoSuchElementException):
             print("Meeting has not been joined")
-
     
     def AskToJoin(self, audio_path, duration):
         # Ask to Join meet
@@ -89,21 +86,18 @@ class JoinGoogleMeet:
         # Ask to join and join now buttons have same xpaths
         AudioRecorder().get_audio(audio_path, duration)
 
- 
-
-
 def main():
     temp_dir = tempfile.mkdtemp()
     audio_path = os.path.join(temp_dir, "output.wav")
-    # Duration for bot to record audio
-    meet_link = 'https://meet.google.com/jwc-kwyy-ozq'
-    duration = 60
+    # Get configuration from environment variables
+    meet_link = os.getenv('MEET_LINK')
+    duration = int(os.getenv('RECORDING_DURATION', 60))
+    
     obj = JoinGoogleMeet()
     obj.Glogin()
     obj.turnOffMicCam(meet_link)
     obj.AskToJoin(audio_path, duration)
     SpeechToText().transcribe(audio_path)
-
 
 #call the main function
 if __name__ == "__main__":
