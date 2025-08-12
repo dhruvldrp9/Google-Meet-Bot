@@ -13,8 +13,17 @@ If you’re looking to use this repo to retrieve video/audio streams or transcri
 - OpenAI API Key
 - A Gmail account
 - A Google Meet link
+- ffmpeg/ffprobe installed and available on PATH (for audio trimming if needed)
 
 ## Installation
+
+### Option 1: Install from PyPI (Recommended)
+
+```bash
+pip install google-meet-bot
+```
+
+### Option 2: Install from source
 
 1. Clone the repository:
    ```bash
@@ -37,17 +46,49 @@ If you’re looking to use this repo to retrieve video/audio streams or transcri
      env\Scripts\activate
      ```
 
-4. Install requirements:
+4. Install package (local):
    ```bash
-   pip install -r requirements.txt
+   pip install -U build
+   pip install .
    ```
 
+## Usage
+
+### Command Line Interface
+
+After installation, you can use the CLI:
+
+```bash
+# Basic usage
+google-meet-bot --meet-link "https://meet.google.com/xxx-xxxx-xxx" --duration 60
+
+# Skip analysis phase
+google-meet-bot --meet-link "https://meet.google.com/xxx-xxxx-xxx" --duration 60 --no-analysis
+
+# Run as Python module
+python -m google_meet_bot --meet-link "https://meet.google.com/xxx-xxxx-xxx" --duration 60
+```
+
+### Programmatic Usage
+
+```python
+from google_meet_bot import JoinGoogleMeet, SpeechToText, AudioRecorder
+
+# Initialize the bot
+bot = JoinGoogleMeet()
+bot.Glogin()
+bot.turnOffMicCam("https://meet.google.com/xxx-xxxx-xxx")
+bot.AskToJoin("output.wav", 60)
+
+# Analyze the recording
+speech_analyzer = SpeechToText()
+speech_analyzer.transcribe("output.wav")
+```
+
+## Configuration
+
 5. Configure environment variables:
-   - Copy the example environment file:
-     ```bash
-     cp .env.example .env
-     ```
-   - Edit the `.env` file with your configuration:
+   - Create a `.env` file in the project root with the following content:
      ```
      # Google Meet Credentials
      EMAIL_ID=your_email@gmail.com
@@ -67,10 +108,7 @@ If you’re looking to use this repo to retrieve video/audio streams or transcri
      WHISPER_MODEL=whisper-1
      ```
 
-6. Run Script:
-   ```bash
-   python3 join_google_meet.py
-   ```
+
 
 ## Environment Variables
 

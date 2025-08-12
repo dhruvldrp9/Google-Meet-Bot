@@ -1,0 +1,59 @@
+[build-system]
+requires = ["hatchling>=1.21.0"]
+build-backend = "hatchling.build"
+
+[project]
+name = "google-meet-bot"
+version = "0.0.1"
+description = "Automate joining Google Meet, record audio, transcribe with Whisper, and summarize using GPT."
+readme = "README.md"
+requires-python = ">=3.8"
+license = { file = "LICENSE" }
+authors = [
+  { name = "Dhruv Patel" }
+]
+keywords = ["google-meet", "selenium", "audio", "whisper", "openai", "transcription", "bot"]
+classifiers = [
+  "License :: OSI Approved :: MIT License",
+  "Programming Language :: Python",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3 :: Only",
+  "Programming Language :: Python :: 3.8",
+  "Programming Language :: Python :: 3.9",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Environment :: Console",
+  "Intended Audience :: Developers",
+  "Topic :: Software Development :: Libraries",
+  "Topic :: Utilities"
+]
+dependencies = [
+  "selenium>=4.10",
+  "python-dotenv>=1.0",
+  "sounddevice>=0.4",
+  "scipy>=1.10",
+  "numpy>=1.26",
+  "openai>=1.0",
+]
+
+[project.urls]
+Homepage = "https://github.com/dhruvldrp9/Google-Meet-Bot"
+Repository = "https://github.com/dhruvldrp9/Google-Meet-Bot"
+Issues = "https://github.com/dhruvldrp9/Google-Meet-Bot/issues"
+
+[project.scripts]
+google-meet-bot = "google_meet_bot.cli:main"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/google_meet_bot"]
+
+[tool.hatch.build.targets.sdist]
+include = [
+  "src/google_meet_bot",
+  "README.md",
+  "LICENSE",
+  "pyproject.toml",
+]
+
+
