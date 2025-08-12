@@ -1,0 +1,71 @@
+# Operating System Files
+.DS_Store
+Thumbs.db
+ehthumbs.db
+.Spotlight-V100
+.Trashes
+__MACOSX
+
+# Build Artifacts
+*.log
+*.class
+*.jar
+*.war
+*.ear
+*.dll
+*.so
+*.o
+*.obj
+*.exe
+*.out
+*.pyc
+*.swp
+*.bak
+*.tmp
+*.zip
+*.tar.gz
+*.rar
+*.7z
+
+# Dependency Directories
+node_modules/
+vendor/
+build/
+dist/
+target/
+out/
+bin/
+
+# Editor Specific Files
+.idea/
+.vscode/
+*.sublime-project
+*.sublime-workspace
+.project
+.classpath
+.settings/
+*.komodoproject
+.sass-cache/
+
+# Sensitive Files
+.env
+.DS_Store
+*.env
+
+# Virtual Environments
+venv/
+.venv/
+
+# Logs and databases
+*.log
+*.sqlite
+*.db
+
+# Thumbnails
+.thumbnails/
+
+# Backup files
+*~
+# IDE specific files
+.history
+.vs
