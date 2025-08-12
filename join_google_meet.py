@@ -87,6 +87,7 @@ class JoinGoogleMeet:
         AudioRecorder().get_audio(audio_path, duration)
 
 def main():
+    DO_ANALYSIS = True
     temp_dir = tempfile.mkdtemp()
     audio_path = os.path.join(temp_dir, "output.wav")
     # Get configuration from environment variables
@@ -97,7 +98,8 @@ def main():
     obj.Glogin()
     obj.turnOffMicCam(meet_link)
     obj.AskToJoin(audio_path, duration)
-    SpeechToText().transcribe(audio_path)
+    if DO_ANALYSIS:
+        SpeechToText().transcribe(audio_path)
 
 #call the main function
 if __name__ == "__main__":
