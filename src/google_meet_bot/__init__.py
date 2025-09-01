@@ -1,4 +1,3 @@
-@@
 """Google Meet Bot package.
 
 Automate joining Google Meet, record audio, transcribe with Whisper, and summarize using GPT.
